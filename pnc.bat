@@ -40,22 +40,26 @@ Set logtimestamp=_
 set FILENAME=database_dump_%logtimestamp%.sql
 
 REM Nastavenie mena suboru
-set "fullname=%~3_%logtimestamp%
+set "fullname=%~3_%logtimestamp%"
 echo %logtimestamp%
 echo Meno suboru bude: %fullname%.zip
-set "fullname=%~3"
 
+REM kontrola èi je 7za nainštalovaný :
+if exist "C:\Program Files\7-Zip\7zFM.exe" ( 
 REM Samotna kompresia
-echo -----> Komprimujem, cakaj prosim.
-7za a -tzip %fullname%.zip %~s1
+         echo -----> Komprimujem, cakaj prosim.
+         7za a -tzip %fullname%.zip %~s1
 
 REM Presun suboru do urcenej zlozky
-set export=%fullname%.zip
-move %export% %~s2
-echo Subor %fullname%.zip bol uspesne presunuty do zlozky %~s2
-echo _______________
-GOTO succes
-
+         set export=%fullname%.zip
+         move %export% %~s2
+         echo Subor %fullname%.zip bol uspesne presunuty do zlozky %~s2
+         echo _______________
+         GOTO succes
+) else (
+        echo 7 zip nie je nainstalovany !
+        Goto succes
+)
 :end
 echo Nezadal si potrebne parametre. Koniec skriptu.
 
@@ -77,3 +81,5 @@ echo ---------------
 :succes
 echo Koniec skriptu.
 echo _______________
+
+:asdf echo [OK]
