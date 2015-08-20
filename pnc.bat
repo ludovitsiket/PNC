@@ -12,12 +12,38 @@ GOTO end
 exit
 
 :prg
+@ECHO OFF
+:: Check WMIC is available
+WMIC.EXE Alias /? >NUL 2>&1 || GOTO s_error
+
+:: Use WMIC to retrieve date and time
+FOR /F "skip=1 tokens=1-6" %%G IN ('WMIC Path Win32_LocalTime Get Day^,Hour^,Minute^,Month^,Second^,Year /Format:table') DO (
+   IF "%%~L"=="" goto s_done
+      Set _yyyy=%%L
+      Set _mm=00%%J
+      Set _dd=00%%G
+)
+:s_done
+
+:: Pad digits with leading zeros
+      Set _mm=%_mm:~-2%
+      Set _dd=%_dd:~-2%
+
+Set logtimestamp=%_yyyy%_%_mm%_%_dd%
+goto make_dump
+
+:s_error
+echo WMIC is not available, using default log filename
+Set logtimestamp=_
+
+:make_dump
+set FILENAME=database_dump_%logtimestamp%.sql
+
 REM Nastavenie mena suboru
-set year=%date:~-4%
-set month=%date:~6,2%
-set day=%date:~3,2%
-set "fullname=%~3_%year%_%month%_%day%"
+set "fullname=%~3_%logtimestamp%
+echo %logtimestamp%
 echo Meno suboru bude: %fullname%.zip
+set "fullname=%~3"
 
 REM Samotna kompresia
 echo -----> Komprimujem, cakaj prosim.
