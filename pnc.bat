@@ -1,8 +1,5 @@
-REM doplnit if podmienky aby neukoncilo hned pri nezadani podmienok, "blbuvzdornost"
 echo off
-echo ________________________
-echo  PNC (pack and copy)   
-echo ________________________ 
+echo PNC (pack and copy)   
 IF NOT %3.==. (GOTO prg) else (GOTO No1)
 
 :No1
@@ -41,25 +38,24 @@ set FILENAME=database_dump_%logtimestamp%.sql
 
 REM Nastavenie mena suboru
 set "fullname=%~3_%logtimestamp%"
-echo %logtimestamp%
-echo Meno suboru bude: %fullname%.zip
 
 REM kontrola èi je 7za nainštalovaný :
 if exist "C:\Program Files\7-Zip\7zFM.exe" ( 
-REM Samotna kompresia
+         REM Samotna kompresia
          echo -----> Komprimujem, cakaj prosim.
          7za a -tzip %fullname%.zip %~s1
 
-REM Presun suboru do urcenej zlozky
+         REM Presun suboru do urcenej zlozky
          set export=%fullname%.zip
          move %export% %~s2
          echo Subor %fullname%.zip bol uspesne presunuty do zlozky %~s2
-         echo _______________
          GOTO succes
 ) else (
-        echo 7 zip nie je nainstalovany !
+        REM Vypis ked 7zip nainstalovany nie je + ukoncenie programu
+        echo Program 7zip nie je nainstalovany !
         Goto succes
 )
+
 :end
 echo Nezadal si potrebne parametre. Koniec skriptu.
 
@@ -69,17 +65,15 @@ GOTO help
 GOTO end
 
 :help
-echo ---------------
+echo ---------------------------------------------------------------------
 echo NAPOVEDA:
-echo Prikaz pnc.bat potrebuje mat zadane vsetky 3 parametre.
+echo Prikaz pnc.bat potrebuje mat pre fungovanie zadane vsetky 3 parametre a nainstalovanu konzolovu verziu programu 7zip.
+echo Syntax prikazu:
 echo pnc.bat "cesta_k_adresaru" "cesta_k_cielovemu_adresaru" meno_suboru
 echo "cesta_k_adresaru" - uplna cesta k adresaru na skomprimovanie (pisat v uvodzovkach)
 echo "cesta_k_cielovemu_adresaru" - uplna cesta k adresaru do ktoreho bude skomprimovany subor presunuty (pisat v uvodzovkach)
-echo meno_suboru - meno suboru ktore bude automaticky doplnene o aktualny datum v tvare rok_mesiac_den
-echo ---------------
+echo meno_suboru - meno suboru ktore bude automaticky doplnene o aktualny datum v tvare rok_mesiac_den a priponu .zip
+echo ---------------------------------------------------------------------
 
 :succes
 echo Koniec skriptu.
-echo _______________
-
-:asdf echo [OK]
